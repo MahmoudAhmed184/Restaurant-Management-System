@@ -8,13 +8,13 @@ public class MenuItemMapper {
     private MenuItemMapper() {
     }
 
-    public static String[][] mapOrderData(List<MenuItem> menuItems) {
+    public static String[][] mapMenuItemsData(List<MenuItem> menuItems) {
         return menuItems.stream()
-                .map(MenuItemMapper::mapOrderData)
+                .map(MenuItemMapper::mapMenuItemsData)
                 .toArray(String[][]::new);
     }
 
-    public static String[] mapOrderData(MenuItem menuItem) {
+    public static String[] mapMenuItemsData(MenuItem menuItem) {
         return new String[]{
                 String.valueOf(menuItem.id()),
                 menuItem.name(),

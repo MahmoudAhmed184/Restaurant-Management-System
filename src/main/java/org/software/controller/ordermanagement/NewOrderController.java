@@ -57,7 +57,7 @@ public class NewOrderController {
         // @todo replace with call to model
         String[] menuColumns = {"Item ID", "Name", "Price", "Category"};
         List<MenuItem> menuItems = menuItemRepository.getAll();
-        String[][] menuData = MenuItemMapper.mapOrderData(menuItems);
+        String[][] menuData = MenuItemMapper.mapMenuItemsData(menuItems);
         newOrderFrame.updateMenuTable(menuColumns, menuData);
     }
 

@@ -32,7 +32,23 @@ public class MainDashboard extends JFrame {
         return instance;
     }
 
+    public void switchToOrderManagementPanel() {
+        tabbedPane.setSelectedIndex(0);
+    }
+
     public void switchToMenuManagementPanel() {
         tabbedPane.setSelectedIndex(1);
+    }
+
+    public void switchToReservationManagementPanel() {
+        tabbedPane.setSelectedIndex(2);
+    }
+
+    public void switchToTableManagementPanel() {
+        tabbedPane.setSelectedIndex(3);
+    }
+
+    public void switchToPaymentPanel() {
+        tabbedPane.setSelectedIndex(4);
     }
 }

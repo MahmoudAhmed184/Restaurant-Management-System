@@ -1,14 +1,20 @@
 package org.software.controller.ordermanagement;
 
+import org.software.model.order.Order;
 import org.software.model.order.OrderManager;
+import org.software.model.repositories.OrderRepository;
 import org.software.utils.OrdersMapper;
 import org.software.view.ordermanagement.OrderManagementPanel;
 
+import java.util.List;
+
 public class OrderManagementController {
     private final OrderManagementPanel orderManagementPanel;
+    private final OrderRepository orderRepository;
 
     public OrderManagementController() {
         this.orderManagementPanel = OrderManagementPanel.getInstance();
+        this.orderRepository = new OrderRepository();
     }
 
     public void initialize() {
@@ -23,7 +29,8 @@ public class OrderManagementController {
 
     private void loadTableData() {
         String[] columnNames = {"Order ID", "Type", "Table Number"};
-        String[][] data = OrdersMapper.mapOrderData(OrderManager.getInstance().getOrders());
+        List<Order> orders = orderRepository.getAll();
+        String[][] data = OrdersMapper.mapOrderData(orders);
         orderManagementPanel.updateOrdersTable(columnNames, data);
     }
 

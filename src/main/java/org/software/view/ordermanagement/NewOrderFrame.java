@@ -1,74 +1,48 @@
 package org.software.view.ordermanagement;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
 
 public class NewOrderFrame extends JFrame {
-    private final DefaultTableModel orderDetailsTableModel;
-    private final JTable orderDetailsTable;
-    private final DefaultTableModel menuTableModel;
-    private final JTable menuTable;
-    private final JButton addButton;
-    private final JButton removeButton;
-    private final JButton confirmButton;
+    private final MenuPanel menuPanel;
+    private final OrderDetailsPanel orderDetailsPanel;
 
     public NewOrderFrame() {
         setTitle("Add New Order");
         setSize(800, 400);
         setLocationRelativeTo(null);
-
         JSplitPane splitPane = new JSplitPane();
         splitPane.setDividerLocation(300);
-
-        // Left Panel - Menu Section
-        JPanel menuPanel = new JPanel(new BorderLayout());
-        menuTable = new JTable(menuTableModel = new DefaultTableModel());
-        menuPanel.add(new JScrollPane(menuTable), BorderLayout.CENTER);
-
-        // Right Panel - Menu Details Section
-        JPanel orderDetailsPanel = new JPanel(new BorderLayout());
-        orderDetailsTable = new JTable(orderDetailsTableModel = new DefaultTableModel());
-        orderDetailsPanel.add(new JScrollPane(orderDetailsTable), BorderLayout.CENTER);
-
-        JPanel orderActionsPanel = new JPanel();
-        orderActionsPanel.add(addButton = new JButton("Add to Order"));
-        orderActionsPanel.add(removeButton = new JButton("Remove"));
-        orderActionsPanel.add(confirmButton = new JButton("Confirm Order"));
-
-        orderDetailsPanel.add(orderActionsPanel, BorderLayout.SOUTH);
-
-        // Add panels to split pane
+        menuPanel = new MenuPanel();
+        orderDetailsPanel = new OrderDetailsPanel();
         splitPane.setLeftComponent(menuPanel);
         splitPane.setRightComponent(orderDetailsPanel);
-
-        add(splitPane);
+        add(splitPane, BorderLayout.CENTER);
     }
 
     public void updateMenuTable(String[] menuColumns, String[][] menuData) {
-        menuTableModel.setDataVector(menuData, menuColumns);
+        menuPanel.updateMenuTable(menuColumns, menuData);
     }
 
     public void updateOrderDetails(String[] orderColumns, String[][] orderData) {
-        orderDetailsTableModel.setDataVector(orderData, orderColumns);
+        orderDetailsPanel.updateOrderDetails(orderColumns, orderData);
     }
-    
+
     public void addAddButtonActionListener(ActionListener listener) {
-        addButton.addActionListener(listener);
+        orderDetailsPanel.addAddButtonActionListener(listener);
     }
-    
+
     public void addRemoveButtonActionListener(ActionListener listener) {
-        removeButton.addActionListener(listener);
+        orderDetailsPanel.addRemoveButtonActionListener(listener);
     }
-    
+
     public void addConfirmButtonActionListener(ActionListener listener) {
-        confirmButton.addActionListener(listener);
+        orderDetailsPanel.addConfirmButtonActionListener(listener);
     }
 
     public int getSelectedMenuTableRow() {
-        return menuTable.getSelectedRow();
+        return menuPanel.getSelectedMenuTableRow();
     }
 
     public void displayMessageDialog(String message) {
@@ -76,19 +50,22 @@ public class NewOrderFrame extends JFrame {
     }
 
     public String getMenuTableValueAt(int row, int column) {
-        return menuTable.getValueAt(row, column).toString();
+        return menuPanel.getMenuTableValueAt(row, column);
     }
 
     public int getSelectedOrderTableRow() {
-        return orderDetailsTable.getSelectedRow();
+        return orderDetailsPanel.getSelectedOrderTableRow();
     }
 
     public String getOrderTableValueAt(int row, int column) {
-        return orderDetailsTable.getValueAt(row, column).toString();
+        return orderDetailsPanel.getOrderTableValueAt(row, column);
     }
 
-    public void addWindowListener(WindowAdapter windowAdapter) {
-        super.addWindowListener(windowAdapter);
+    public String getSelectedOrderType() {
+        return orderDetailsPanel.getSelectedOrderType();
+    }
+
+    public String getTableNumber() {
+        return orderDetailsPanel.getTableNumber();
     }
 }
-

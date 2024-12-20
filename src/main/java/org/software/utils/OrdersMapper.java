@@ -5,7 +5,8 @@ import org.software.model.order.Order;
 import java.util.List;
 
 public class OrdersMapper {
-    private OrdersMapper() {}
+    private OrdersMapper() {
+    }
 
     public static String[][] mapOrderData(List<Order> orders) {
         return orders.stream()
@@ -17,7 +18,7 @@ public class OrdersMapper {
         return new String[]{
             String.valueOf(order.orderId()),
             String.valueOf(order.type()),
-            String.valueOf(order.tableNumber())
+            String.valueOf(order.tableNumber() == -1 ? "" : order.tableNumber()),
         };
     }
 }

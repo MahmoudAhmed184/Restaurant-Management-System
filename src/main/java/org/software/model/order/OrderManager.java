@@ -29,10 +29,6 @@ public class OrderManager {
         orderBuilder.addItem(menuItem);
     }
 
-    public void removeItemFromOrder(MenuItem menuItem) {
-        orderBuilder.removeItem(menuItem);
-    }
-
     public void removeItemFromOrder(int id) {
         orderBuilder.removeItem(id);
     }
@@ -59,4 +55,11 @@ public class OrderManager {
         return orders;
     }
 
+    public void setOrderType(String selectedOrderType) {
+        orderBuilder.setType(selectedOrderType);
+    }
+
+    public void setTableNumber(int tableNumber) {
+        orderBuilder.setTableNumber(tableNumber);
+    }
 }

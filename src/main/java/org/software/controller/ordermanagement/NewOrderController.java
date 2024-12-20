@@ -106,6 +106,13 @@ public class NewOrderController {
     }
 
     private void confirmOrder() {
+        orderManager.setOrderType(newOrderFrame.getSelectedOrderType());
+        // @todo there is a fucking problem
+        try {
+            orderManager.setTableNumber(Integer.parseInt(newOrderFrame.getTableNumber()));
+        } catch (NumberFormatException _) {
+
+        }
         Order order = orderManager.saveOrder();
         orderManager.createNewOrder();
         newOrderFrame.dispose();

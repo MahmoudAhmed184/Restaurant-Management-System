@@ -35,22 +35,13 @@ public class OrderBuilder {
         return this;
     }
 
-
     public void addItem(MenuItem menuItem) {
-
-        // @todo there is a fucking problem
         items.stream()
                 .filter(orderItem -> orderItem.getItem().equals(menuItem))
                 .findFirst()
                 .ifPresentOrElse(orderItem -> orderItem.setQuantity(orderItem.getQuantity() + 1),
                         () -> items.add(new OrderItem(menuItem, 1)));
     }
-
-
-    public void removeItem(MenuItem menuItem) {
-        items.removeIf(orderItem -> orderItem.getItem().equals(menuItem));
-    }
-
 
     public void removeItem(int id) {
         items.removeIf(orderItem -> orderItem.getItem().id() == id);

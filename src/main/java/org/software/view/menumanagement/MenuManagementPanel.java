@@ -1,6 +1,7 @@
 package org.software.view.menumanagement;
 
 import java.awt.*;
+import java.awt.event.ActionListener;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -16,14 +17,7 @@ public class MenuManagementPanel extends JPanel {
     private MenuManagementPanel() {
         setLayout(new BorderLayout());
 
-        // Menu Table
-        String[] columnNames = {"Item Name", "Category", "Price", "Availability"};
-        Object[][] data = {
-                {"Burger", "Main Course", "5.99", "Available"},
-                {"Cake", "Dessert", "3.50", "Out of Stock"}
-        };
-
-        menuTableModel = new DefaultTableModel(data, columnNames);
+        menuTableModel = new DefaultTableModel();
         menuTable = new JTable(menuTableModel);
         JScrollPane tableScrollPane = new JScrollPane(menuTable);
 
@@ -41,6 +35,41 @@ public class MenuManagementPanel extends JPanel {
             instance = new MenuManagementPanel();
         }
         return instance;
+    }
+
+    public void updateRowInMenuTable(int row,String[] data){
+        menuTableModel.removeRow(row);
+        menuTableModel.insertRow(row,data);
+    }
+
+    public void removeRowInMenuTable(int row){
+        menuTableModel.removeRow(row);
+    }
+
+    public void updateMenuTable(String[] header, String[][] data) {
+        menuTableModel.setDataVector(data, header);
+    }
+
+    public void addRowToMenuTable(String[] rowData) {
+        menuTableModel.addRow(rowData);
+    }
+
+    public String getMenuTableValueAt(int row, int column) {
+        return menuTable.getValueAt(row, column).toString();
+    }
+
+    public int getSelectedItem() {
+        return menuTable.getSelectedRow();
+    }
+
+    public void addAddButtonActionListener(ActionListener listener) {
+        addButton.addActionListener(listener);
+    }
+    public void addEditButtonActionListener(ActionListener listener) {
+        editButton.addActionListener(listener);
+    }
+    public void addDeleteButtonActionListener(ActionListener listener) {
+        deleteButton.addActionListener(listener);
     }
 }
 

@@ -74,7 +74,7 @@ public class MenuItemRepository implements IMenuItemRepository {
                 if (generatedKeys.next()) {
                     return MenuItemFactory.getMenuItem(
                         menuItem.category(),
-                        menuItem.id(),
+                        generatedKeys.getInt(1),
                         menuItem.name(),
                         menuItem.price()
                     );

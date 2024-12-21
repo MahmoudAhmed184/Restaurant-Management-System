@@ -21,26 +21,13 @@ public class OrderRepository implements IOrderRepository {
         inner join MenuItems 
         ON OrderDetails.item_id = MenuItems.item_id 
         WHERE OrderDetails.order_id = ?""";
+    public static final String INSERT_ITEM_INTO_ORDER_DETAILS_QUERY = "INSERT INTO OrderDetails (order_id, item_id, quantity) VALUES (?, ?, ?)";
 
     private final Connection connection;
 
     public OrderRepository() {
         this.connection = DatabaseManager.getInstance().getConnection();
     }
-
-    private void createOrderItems(Order order) {
-        try (PreparedStatement statement = connection.prepareStatement("INSERT INTO OrderDetails (order_id, item_id, quantity) VALUES (?, ?, ?)")) {
-            for (OrderItem orderItem : order.items()) {
-                statement.setInt(1, order.orderId());
-                statement.setInt(2, orderItem.getItem().id());
-                statement.setInt(3, orderItem.getQuantity());
-                statement.executeUpdate();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
 
     @Override
     public List<Order> getAll() {
@@ -75,21 +62,23 @@ public class OrderRepository implements IOrderRepository {
     public Order create(Order order) {
         try (PreparedStatement statement = connection.prepareStatement(INSERT_QUERY, Statement.RETURN_GENERATED_KEYS)) {
             setOrderPreparedStatementParams(statement, order);
+
             int affectedRows = statement.executeUpdate();
 
             if (affectedRows > 0) {
                 try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
                     if (generatedKeys.next()) {
-                        order =  new Order(
+                        order = new Order(
                             generatedKeys.getInt(1),
                             order.type(),
                             order.tableNumber(),
-                            getOrderItems(generatedKeys.getInt(1)) // @todo
+                            order.items()
                         );
+                        createOrderItems(order);
                     }
                 }
             }
-            createOrderItems(order);
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -100,7 +89,7 @@ public class OrderRepository implements IOrderRepository {
     public Order update(Order order) {
         try (PreparedStatement statement = connection.prepareStatement(UPDATE_QUERY)) {
             setOrderPreparedStatementParams(statement, order);
-            statement.setInt(3, order.orderId());  // order_id for updating
+            statement.setInt(3, order.orderId());
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -113,6 +102,7 @@ public class OrderRepository implements IOrderRepository {
         try (PreparedStatement statement = connection.prepareStatement(DELETE_QUERY)) {
             statement.setInt(1, order.orderId());
             statement.executeUpdate();
+            // @todo delete the order items
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -159,5 +149,18 @@ public class OrderRepository implements IOrderRepository {
             resultSet.getBigDecimal("price"),
             resultSet.getString("category")
         );
+    }
+
+    private void createOrderItems(Order order) {
+        try (PreparedStatement statement = connection.prepareStatement(INSERT_ITEM_INTO_ORDER_DETAILS_QUERY)) {
+            for (OrderItem orderItem : order.items()) {
+                statement.setInt(1, order.orderId());
+                statement.setInt(2, orderItem.getItem().id());
+                statement.setInt(3, orderItem.getQuantity());
+                statement.executeUpdate();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

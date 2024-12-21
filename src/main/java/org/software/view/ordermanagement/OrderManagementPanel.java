@@ -10,7 +10,8 @@ public class OrderManagementPanel extends JPanel {
     private final JTable ordersTable;
     private final DefaultTableModel ordersTableModel;
     private JButton addOrderButton;
-    private JButton viewOrderButton;
+    private JButton checkoutOrderButton;
+    private JButton cancelOrderButton;
 
     private OrderManagementPanel() {
         setLayout(new BorderLayout());
@@ -31,7 +32,8 @@ public class OrderManagementPanel extends JPanel {
     private JPanel createButtonPanel() {
         JPanel buttonPanel = new JPanel();
         buttonPanel.add(addOrderButton = new JButton("Add New Order"));
-        buttonPanel.add(viewOrderButton = new JButton("View Order"));
+        buttonPanel.add(checkoutOrderButton = new JButton("Checkout Order"));
+        buttonPanel.add(cancelOrderButton = new JButton("Cancel Order"));
         return buttonPanel;
     }
 
@@ -47,8 +49,16 @@ public class OrderManagementPanel extends JPanel {
         addOrderButton.addActionListener(listener);
     }
 
-    public void addViewOrderButtonActionListener(ActionListener listener) {
-        viewOrderButton.addActionListener(listener);
+    public void addCheckoutOrderButtonActionListener(ActionListener listener) {
+        checkoutOrderButton.addActionListener(listener);
+    }
+
+    public void addCancelOrderButtonActionListener(ActionListener listener) {
+        cancelOrderButton.addActionListener(listener);
+    }
+
+    public String getOrderTableValueAt(int row, int column) {
+        return ordersTableModel.getValueAt(row, column).toString();
     }
 
     public int getSelectedRow() {
@@ -61,5 +71,9 @@ public class OrderManagementPanel extends JPanel {
 
     public NewOrderFrame createNewOrderFrame() {
         return new NewOrderFrame();
+    }
+
+    public void removeRowFromOrdersTable(int row) {
+        ordersTableModel.removeRow(row);
     }
 }

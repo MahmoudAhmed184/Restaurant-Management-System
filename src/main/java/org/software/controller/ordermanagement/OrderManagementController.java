@@ -1,7 +1,6 @@
 package org.software.controller.ordermanagement;
 
 import org.software.model.order.Order;
-import org.software.model.order.OrderManager;
 import org.software.model.repositories.OrderRepository;
 import org.software.utils.OrdersMapper;
 import org.software.view.ordermanagement.OrderManagementPanel;
@@ -24,7 +23,9 @@ public class OrderManagementController {
 
     private void registerActionListener() {
         orderManagementPanel.addAddOrderButtonActionListener(e -> openAddNewOrderFrame());
-        orderManagementPanel.addViewOrderButtonActionListener(e -> viewSelectedOrder());
+        orderManagementPanel.addCheckoutOrderButtonActionListener(e -> checkoutOrder());
+        orderManagementPanel.addCancelOrderButtonActionListener(e -> cancelOrder());
+
     }
 
     private void loadTableData() {
@@ -39,13 +40,28 @@ public class OrderManagementController {
         newOrderController.initialize();
     }
 
-    private void viewSelectedOrder() {
+    private void checkoutOrder() {
         int selectedRow = orderManagementPanel.getSelectedRow();
         if (selectedRow == -1) {
             orderManagementPanel.displayMessageDialog("Please select an order to view.");
             return;
         }
-        // @todo view Selected Row Logic
+        int orderId = Integer.parseInt(orderManagementPanel.getOrderTableValueAt(selectedRow, 0));
+        Order order = orderRepository.getById(orderId);
+        PaymentController paymentController = new PaymentController(order);
+        paymentController.initialize();
+    }
 
+    private void cancelOrder() {
+        int selectedRow = orderManagementPanel.getSelectedRow();
+        if (selectedRow == -1) {
+            orderManagementPanel.displayMessageDialog("Please select an order to view.");
+            return;
+        }
+        int orderId = Integer.parseInt(orderManagementPanel.getOrderTableValueAt(selectedRow, 0));
+        Order order = orderRepository.getById(orderId);
+        orderRepository.delete(order);
+        orderManagementPanel.removeRowFromOrdersTable(selectedRow);
+        orderManagementPanel.displayMessageDialog("Order canceled.");
     }
 }

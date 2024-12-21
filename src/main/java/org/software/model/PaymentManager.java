@@ -17,16 +17,13 @@ public class PaymentManager {
         return instance;
     }
 
-    public void pay() {
-    }
-
     public BigDecimal getTotalPrice(Order order) {
         return order.items().stream()
-            .map(PaymentManager::getItemTotal)
+            .map(PaymentManager::getSubPrice)
             .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    private static BigDecimal getItemTotal(OrderItem item) {
+    public static BigDecimal getSubPrice(OrderItem item) {
         return item.getItem().price().multiply(BigDecimal.valueOf(item.getQuantity()));
     }
 }
